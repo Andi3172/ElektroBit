@@ -65,6 +65,20 @@ public:
             file.close();
         }
     }
+
+    void saveNewTaskToFile(string task){
+        ofstream file(name + ".txt", ios::app);
+        if(file.is_open()){
+            file << task << endl;
+            file.close();
+        }
+        addTask(task);
+    }
+
+    void refreshTasks(){
+        tasks.clear();
+        loadFromFile();
+    }
 };
 
 #endif // LISTS_HPP

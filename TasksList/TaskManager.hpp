@@ -1,44 +1,49 @@
-#pragma once
+#ifndef TASKMANAGER_HPP
+#define TASKMANAGER_HPP
 #include <iostream>
+#include <vector>
 #include <list>
 #include <string>
+#include <fstream>
 #include "Lists.hpp"
-#include <vector>
 
 using namespace std;
 
-class TaskManager
-{
+class TaskManager {
 private:
+    vector<string> listNames;
     vector<List> lists;
-
 public:
+    TaskManager() = default;
+
     void addList(string name){
-        lists.push_back(List(name));
+        List newList(name);
+        newList.loadFromFile();
+        listNames.push_back(name);
+        lists.push_back(newList);
     }
+
     void removeList(string name){
-        for(auto i = lists.begin(); i != lists.end(); i++){
-            if(i->getName() == name){
-                lists.erase(i);
-                break;
-            }
+        auto it = find(listNames.begin(), listNames.end(), name);
+        if(it != listNames.end()){
+            lists.erase(lists.begin() + distance(listNames.begin(), it));
+            listNames.erase(it);
         }
     }
 
     void showLists(){
-        cout << "Lists:\n";
-        for(const auto& list: lists){
-            cout << "-> "<< list.getName() <<endl;
+        cout << "Lists: \n";
+        for(const auto& list: listNames){
+            cout << "-> " << list << endl;
         }
     }
 
-    List* getList(string name){
-        for(auto& list: lists){
-            if(list.getName()== name){
-                return &list;
-            }
-        }
-        return nullptr;
+    vector<List>& getLists(){
+        return lists;
     }
+
+
 
 };
+
+#endif //TASKMANAGER_HPP
